@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:news_pro/core/controllers/posts/more_post_controller.dart';
 
 import '../../../core/controllers/auth/auth_controller.dart';
 import '../../../core/controllers/category/categories_controller.dart';
 import '../../../core/controllers/notifications/notification_remote.dart';
 import '../../../core/controllers/posts/categories_post_controller.dart';
-import '../../../core/controllers/posts/feature_post_controller.dart';
 import '../../../core/controllers/posts/saved_post_controller.dart';
 import '../../../core/models/category.dart';
 import '../../../core/repositories/others/internet_state.dart';
@@ -23,8 +23,7 @@ class HomePage extends ConsumerStatefulWidget {
   ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage>
-    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
+class _HomePageState extends ConsumerState<HomePage> with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   /// you can make api calls and put your categories here, but trending should
   /// be always first as it is
   List<CategoryModel> _feturedCategories = [];
@@ -35,11 +34,8 @@ class _HomePageState extends ConsumerState<HomePage>
   _setCategories() async {
     ref.read(_isLoading.notifier).state = true;
     try {
-      _feturedCategories = await ref
-          .read(categoriesController.notifier)
-          .getAllFeatureCategories();
-      _tabController =
-          TabController(length: _feturedCategories.length, vsync: this);
+      _feturedCategories = await ref.read(categoriesController.notifier).getAllFeatureCategories();
+      _tabController = TabController(length: _feturedCategories.length, vsync: this);
     } on Exception {
       _tabController = TabController(length: 1, vsync: this);
     }
@@ -68,7 +64,8 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     bool isFetching = ref.watch(_isLoading);
-    final featurePost = ref.watch(featurePostController);
+    final featurePost = ref.watch(moreRelatedPostController(9));
+
     final internetAvailable = ref.watch(internetStateProvider(context));
 
     if (isFetching) {
@@ -103,8 +100,7 @@ class _HomePageState extends ConsumerState<HomePage>
           ),
           actions: [
             IconButton(
-              onPressed: () =>
-                  Navigator.pushNamed(context, AppRoutes.notification),
+              onPressed: () => Navigator.pushNamed(context, AppRoutes.notification),
               icon: const Icon(
                 Icons.notifications,
                 color: Colors.white,

@@ -4,8 +4,12 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:news_pro/config/wp_config.dart';
 import 'package:news_pro/core/constants/constants.dart';
 
+import '../../core/models/article.dart';
+
 class OnePoemPostPage extends StatefulWidget {
-  const OnePoemPostPage({Key? key}) : super(key: key);
+  const OnePoemPostPage({Key? key, required this.post}) : super(key: key);
+
+  final ArticleModel post;
 
   @override
   State<OnePoemPostPage> createState() => _OnePoemPostPageState();
@@ -14,12 +18,14 @@ class OnePoemPostPage extends StatefulWidget {
 class _OnePoemPostPageState extends State<OnePoemPostPage> {
   @override
   Widget build(BuildContext context) {
+    ArticleModel post = widget.post;
+
     return Scaffold(
       backgroundColor: const Color(0xFFf4e6ca),
       appBar: AppBar(
         leading: const BackButton(),
         title: Text(
-          'Poem Title',
+          post.title,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.grey.shade700,
@@ -62,10 +68,11 @@ class _OnePoemPostPageState extends State<OnePoemPostPage> {
               color: WPConfig.primaryColor,
             ),
             const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Text(
-                'Lorem ipsum dolor sit amet, con\nsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit \nesse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,\nsunt in culpa qui officia deserunt mollit anim id est laborum.',
+                post.content,
+                style: const TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
             const SizedBox(height: 20),
@@ -80,11 +87,12 @@ class _OnePoemPostPageState extends State<OnePoemPostPage> {
                   ),
                   AppSizedBox.w10,
                   Text(
-                    DateFormat.yMMMMd(context.locale.toLanguageTag()).format(
-                      DateTime(2022, 7, 22),
-                    ),
+                    DateFormat.yMMMMd(context.locale.toLanguageTag()).format(post.date),
+                    textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.caption?.copyWith(
-                          color: Colors.black,
+                          fontSize: 12,
+                          fontFamily: 'Avenir',
+                          color: const Color(0xff0f1010),
                         ),
                   ),
                 ],

@@ -33,22 +33,24 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   final _formKey = GlobalKey<FormState>();
 
   _search() async {
+    // print(dateRange?.start);
+    // print(dateRange?.end);
+
     bool isValid = _formKey.currentState?.validate() ?? false;
-    if (isValid) {
+    if (isValid || (dateRange?.start != null && dateRange?.end != null)) {
       AppUtil.dismissKeyboard(context: context);
       _isSearching = true;
       _isOnHistory = false;
       if (mounted) setState(() {});
       final repo = ref.read(postRepoProvider);
-      _searchedList = await repo.searchPost(keyword: _query.text);
+      _searchedList = await repo.searchPost(keyword: _query.text,start: dateRange?.start,end: dateRange?.end);
       ref.read(searchHistoryController.notifier).addEntry(_query.text);
       _isSearching = false;
       if (mounted) setState(() {});
     }
   }
 
-  final GlobalKey<AnimatedListState> _animatedListKey =
-      GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _animatedListKey = GlobalKey<AnimatedListState>();
 
   @override
   void initState() {
@@ -102,8 +104,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     _isOnHistory = true;
                     ref.read(loadInterstitalAd);
                   }),
-                  icon: const Icon(IconlyLight.timeSquare,
-                      color: Color(0xFF006199)),
+                  icon: const Icon(IconlyLight.timeSquare, color: Color(0xFF006199)),
                 )
         ],
       ),
@@ -253,9 +254,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 /// Page Swtich Animation
                 PageTransitionSwitcher(
                   duration: AppDefaults.duration,
-                  transitionBuilder: ((child, primaryAnimation,
-                          secondaryAnimation) =>
-                      SharedAxisTransition(
+                  transitionBuilder: ((child, primaryAnimation, secondaryAnimation) => SharedAxisTransition(
                         animation: primaryAnimation,
                         secondaryAnimation: secondaryAnimation,
                         transitionType: SharedAxisTransitionType.vertical,
@@ -270,9 +269,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                             _search();
                           },
                         )
-                      : SearchedArticleList(
-                          searchedList: _searchedList,
-                          isSearching: _isSearching),
+                      : SearchedArticleList(searchedList: _searchedList, isSearching: _isSearching),
                 ),
               ],
             ),

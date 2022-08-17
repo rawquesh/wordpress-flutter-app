@@ -26,6 +26,9 @@ abstract class AuthRepoAbstract {
     required String userName,
     required String email,
     required String password,
+    required String firstName,
+    required String lastName,
+    required String profileUrl,
   });
 
   /// Send OTP for password reset link
@@ -189,6 +192,9 @@ class AuthRepository extends AuthRepoAbstract {
     required String userName,
     required String email,
     required String password,
+    required String firstName,
+    required String lastName,
+    required String profileUrl,
   }) async {
     String url = 'https://${WPConfig.url}/wp-json/wp/v2/users/register/';
 
@@ -197,7 +203,14 @@ class AuthRepository extends AuthRepoAbstract {
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(
-          {'username': userName, 'email': email, 'password': password},
+          {
+            'username': userName,
+            'email': email,
+            'password': password,
+            'user_first_name': firstName,
+            'user_last_name': lastName,
+            'user_avatar_url': profileUrl,
+          },
         ),
       );
 
@@ -217,8 +230,7 @@ class AuthRepository extends AuthRepoAbstract {
 
   @override
   Future<bool> sendPasswordResetLink(String email) async {
-    String url =
-        'https://${WPConfig.url}/wp-json/bdpwr/v1/reset-password?email=$email';
+    String url = 'https://${WPConfig.url}/wp-json/bdpwr/v1/reset-password?email=$email';
 
     debugPrint('Send Password $url');
 
@@ -248,8 +260,7 @@ class AuthRepository extends AuthRepoAbstract {
     required String newPassword,
     required int otp,
   }) async {
-    String url =
-        'https://${WPConfig.url}/wp-json/bdpwr/v1/set-password?email=$email&password=$newPassword&code=$otp';
+    String url = 'https://${WPConfig.url}/wp-json/bdpwr/v1/set-password?email=$email&password=$newPassword&code=$otp';
 
     debugPrint('Set password url $url');
 
@@ -274,8 +285,7 @@ class AuthRepository extends AuthRepoAbstract {
 
   @override
   Future<bool> verifyOTP({required int otp, required String email}) async {
-    String url =
-        'https://${WPConfig.url}/wp-json/bdpwr/v1/validate-code?email=$email&code=$otp';
+    String url = 'https://${WPConfig.url}/wp-json/bdpwr/v1/validate-code?email=$email&code=$otp';
 
     debugPrint('Verify OTP url $url');
     try {

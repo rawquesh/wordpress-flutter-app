@@ -16,11 +16,31 @@ import '../../../../core/models/article.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/utils/app_utils.dart';
 import 'post_meta_data.dart';
+import 'package:http/http.dart' as http;
 
 class PostPageBody extends StatelessWidget {
   const PostPageBody({Key? key, required this.article}) : super(key: key);
 
   final ArticleModel article;
+
+  Future<ArticleModel?> getPost() async {
+    final client = http.Client();
+    String url = 'https://${WPConfig.url}/wp-json/wp/v2/posts??orderby=rand';
+
+    try {
+      final response = await client.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return ArticleModel.fromJson(response.body);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } finally {
+      client.close();
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +91,9 @@ class PostPageBody extends StatelessWidget {
                         child: Column(
                           children: [
                             IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  // TODO
+                                },
                                 icon: Icon(
                                   Icons.refresh,
                                   color: Colors.blue.shade800,
@@ -103,9 +125,7 @@ class PostPageBody extends StatelessWidget {
                             children: [
                               IconButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, AppRoutes.comment,
-                                        arguments: article);
+                                    Navigator.pushNamed(context, AppRoutes.comment, arguments: article);
                                   },
                                   icon: const Icon(
                                     UniconsLine.comment,
@@ -129,8 +149,7 @@ class PostPageBody extends StatelessWidget {
                           child: Row(
                             children: [
                               IconButton(
-                                  onPressed: () async =>
-                                      await Share.share(article.link),
+                                  onPressed: () async => await Share.share(article.link),
                                   icon: const Icon(
                                     UniconsLine.share,
                                     color: Colors.white,
@@ -190,8 +209,7 @@ class ArticleHtmlConverter extends StatelessWidget {
         ),
         'figure': Style(margin: EdgeInsets.zero, padding: EdgeInsets.zero),
       },
-      onImageTap: (String? url, RenderContext context1,
-          Map<String, String> attributes, _) {
+      onImageTap: (String? url, RenderContext context1, Map<String, String> attributes, _) {
         if (url != null) {
           Navigator.push(
             context,

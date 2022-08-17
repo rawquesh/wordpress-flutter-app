@@ -62,8 +62,7 @@ class PostRepository extends PostRepoAbstract {
     required int pageNumber,
   }) async {
     final client = http.Client();
-    String url =
-        'https://${WPConfig.url}/wp-json/wp/v2/posts/?page=$pageNumber';
+    String url = 'https://${WPConfig.url}/wp-json/wp/v2/posts/?page=$pageNumber';
     List<ArticleModel> articles = [];
     try {
       final response = await client.get(Uri.parse(url));
@@ -87,8 +86,7 @@ class PostRepository extends PostRepoAbstract {
     required int categoryID,
   }) async {
     final client = http.Client();
-    String url =
-        'https://${WPConfig.url}/wp-json/wp/v2/posts/?categories=$categoryID&page=$pageNumber';
+    String url = 'https://${WPConfig.url}/wp-json/wp/v2/posts/?categories=$categoryID&page=$pageNumber';
     List<ArticleModel> articles = [];
     try {
       final response = await client.get(Uri.parse(url));
@@ -111,8 +109,7 @@ class PostRepository extends PostRepoAbstract {
     required int tagID,
   }) async {
     final client = http.Client();
-    String url =
-        'https://${WPConfig.url}/wp-json/wp/v2/posts/?tags=$tagID&page=$pageNumber';
+    String url = 'https://${WPConfig.url}/wp-json/wp/v2/posts/?tags=$tagID&page=$pageNumber';
     List<ArticleModel> articles = [];
     try {
       final response = await client.get(Uri.parse(url));
@@ -129,6 +126,8 @@ class PostRepository extends PostRepoAbstract {
     }
   }
 
+  // TODO post repo
+
   /* <---- Get Popular Posts -----> */
   @override
   Future<List<ArticleModel>> getPopularPosts({
@@ -140,8 +139,7 @@ class PostRepository extends PostRepoAbstract {
 
     /// Fetching from Plugin
     if (isPlugin) {
-      String url =
-          'https://${WPConfig.url}/wp-json/wordpress-popular-posts/v1/popular-posts/';
+      String url = 'https://${WPConfig.url}/wp-json/wordpress-popular-posts/v1/popular-posts/';
       try {
         final response = await client.get(Uri.parse(url));
         if (response.statusCode == 200) {
@@ -158,8 +156,7 @@ class PostRepository extends PostRepoAbstract {
 
     /// If not plugin then we are going to fetch feature category
     else {
-      String url =
-          'https://${WPConfig.url}/wp-json/wp/v2/posts/?categories=$featureCategory';
+      String url = 'https://${WPConfig.url}/wp-json/wp/v2/posts/?categories=$featureCategory';
       try {
         final response = await client.get(Uri.parse(url));
         if (response.statusCode == 200) {
@@ -198,9 +195,14 @@ class PostRepository extends PostRepoAbstract {
 
   /* <---- Search a post -----> */
   @override
-  Future<List<ArticleModel>> searchPost({required String keyword}) async {
+  Future<List<ArticleModel>> searchPost({required String keyword, DateTime? start, DateTime? end}) async {
     final client = http.Client();
     String url = 'https://${WPConfig.url}/wp-json/wp/v2/posts/?search=$keyword';
+    if (start != null && end != null) {
+      url = '$url&before=$end&after=$start';
+    }
+
+    // print(url);
     List<ArticleModel> articles = [];
 
     try {

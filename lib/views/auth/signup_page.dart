@@ -28,8 +28,7 @@ class SignUpPage extends StatelessWidget {
         ),
         title: const Text(
           'Sign Up',
-          style: TextStyle(
-              color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+          style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
         ),
       ),
       body: const SafeArea(
@@ -96,6 +95,9 @@ class _LoginFormState extends ConsumerState<SignupForm> {
         bool isValidUser = await ref.read(authController.notifier).signup(
               username: _username.text,
               email: _email.text,
+              firstName: _name.text,
+              lastName: _surname.text,
+              profileUrl: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_92x30dp.png',
               password: _pass.text,
               context: context,
             );
@@ -163,8 +165,7 @@ class _LoginFormState extends ConsumerState<SignupForm> {
                                     ),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(
-                                        MediaQuery.of(context).size.width *
-                                            0.40,
+                                        MediaQuery.of(context).size.width * 0.40,
                                       ),
                                     ),
                                     color: Colors.white,
@@ -172,8 +173,7 @@ class _LoginFormState extends ConsumerState<SignupForm> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(
-                                        MediaQuery.of(context).size.width *
-                                            0.40,
+                                        MediaQuery.of(context).size.width * 0.40,
                                       ),
                                     ),
                                     child: Image.file(
@@ -218,8 +218,7 @@ class _LoginFormState extends ConsumerState<SignupForm> {
                                 context,
                                 body: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     const SizedBox(height: 20),
                                     const Text(
@@ -231,8 +230,7 @@ class _LoginFormState extends ConsumerState<SignupForm> {
                                         Expanded(
                                           child: SelectProfileImageWidget(
                                             onSelect: (selectedImage) async {
-                                              this.selectedImage =
-                                                  selectedImage;
+                                              this.selectedImage = selectedImage;
                                               setState(() {
                                                 showImageErrorText = false;
                                               });
@@ -245,8 +243,7 @@ class _LoginFormState extends ConsumerState<SignupForm> {
                                         Expanded(
                                           child: ShootProfileImageWidget(
                                             onSelect: (selectedImage) {
-                                              this.selectedImage =
-                                                  selectedImage;
+                                              this.selectedImage = selectedImage;
                                               setState(() {
                                                 showImageErrorText = false;
                                               });
@@ -276,10 +273,7 @@ class _LoginFormState extends ConsumerState<SignupForm> {
                       Text(
                         'Image is required',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText2!
-                            .copyWith(color: Colors.red),
+                        style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.red),
                       ),
                     ],
                   ),
@@ -357,9 +351,7 @@ class _LoginFormState extends ConsumerState<SignupForm> {
                   decoration: InputDecoration(
                     labelText: 'password'.tr(),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscureText
-                          ? Icons.visibility_off
-                          : Icons.visibility),
+                      icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
                       onPressed: _toggle,
                     ),
                   ),
@@ -411,9 +403,7 @@ class _LoginFormState extends ConsumerState<SignupForm> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _signUp,
-              child: _isCreating
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : Text('sign_up'.tr()),
+              child: _isCreating ? const CircularProgressIndicator(color: Colors.white) : Text('sign_up'.tr()),
             ),
           ),
         ),

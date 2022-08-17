@@ -17,20 +17,20 @@ class LoadingAppPage extends ConsumerWidget {
     final appState = ref.watch(coreAppStateProvider(context));
     return appState.map(
         data: (initialState) {
-          // switch (initialState.value) {
-          //   case AppState.introNotDone:
-          //     return const OnboardingPage();
-          //   case AppState.loggedIn:
-          //     return const EntryPointUI();
-          //   case AppState.loggedOut:
-          //     return WPConfig.forceUserToLoginEverytime
-          //         ? const LoginIntroPage()
-          //         : const EntryPointUI();
-          //   default:
-          //     return const EntryPointUI();
-          // }
+          switch (initialState.value) {
+            case AppState.introNotDone:
+              return const OnboardingPage();
+            case AppState.loggedIn:
+              return const EntryPointUI();
+            case AppState.loggedOut:
+              return WPConfig.forceUserToLoginEverytime
+                  ? const LoginIntroPage()
+                  : const EntryPointUI();
+            default:
+              return const EntryPointUI();
+          }
 
-          return const LoginPage();
+          // return const LoginPage();
 
         },
         error: (t) => const Text('Unknown Error'),

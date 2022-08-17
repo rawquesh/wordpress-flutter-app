@@ -69,12 +69,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String username,
     required String email,
     required String password,
+    required String firstName,
+    required String lastName,
+    required String profileUrl,
     required BuildContext context,
   }) async {
     final isCreated = await repository.signUp(
       userName: username,
       email: email,
       password: password,
+      firstName: firstName,
+      lastName: lastName,
+      profileUrl: profileUrl,
     );
     if (isCreated == true) {
       /// Login With the new details
@@ -90,8 +96,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = AuthState();
     await repository.logout();
     if (mounted) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, AppRoutes.loginIntro, (v) => false);
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.loginIntro, (v) => false);
     }
   }
 
